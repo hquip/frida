@@ -1,0 +1,50 @@
+﻿F:\cursor\frida\subprojects\frida-core\compat\build.py:36:    command.add_argument("frida_version", help="the Frida version")
+F:\cursor\frida\subprojects\frida-core\compat\build.py:49:                                                 args.frida_version,
+F:\cursor\frida\subprojects\frida-core\compat\build.py:114:          frida_version: str,
+F:\cursor\frida\subprojects\frida-core\compat\build.py:212:                           name=f"frida-helper-{other_arch}",
+F:\cursor\frida\subprojects\frida-core\compat\build.py:216:                           name=f"frida-agent-{other_arch}.dylib",
+F:\cursor\frida\subprojects\frida-core\compat\build.py:223:                               name=f"frida-gadget-{other_arch}.dylib",
+F:\cursor\frida\subprojects\frida-core\compat\build.py:230:                               name=f"frida-server-{other_arch}",
+F:\cursor\frida\subprojects\frida-core\compat\build.py:301:                           name="frida-agent-arm.so",
+F:\cursor\frida\subprojects\frida-core\compat\build.py:308:                               name="frida-agent-arm64.so",
+F:\cursor\frida\subprojects\frida-core\compat\build.py:313:        raw_allowed_prebuilds = os.environ.get("FRIDA_ALLOWED_PREBUILDS")
+F:\cursor\frida\subprojects\frida-core\compat\build.py:316:        state = State(role, builddir, top_builddir, frida_version, host_os, host_config, allowed_prebuilds, outputs)
+F:\cursor\frida\subprojects\frida-core\compat\build.py:350:    frida_version: str
+F:\cursor\frida\subprojects\frida-core\compat\build.py:412:    build_env["FRIDA_RELENG"] = str(releng_location)
+F:\cursor\frida\subprojects\frida-core\compat\build.py:426:                version_opt = next((opt for opt in options if opt.startswith("-Dfrida_version=")), None)
+F:\cursor\frida\subprojects\frida-core\compat\build.py:428:                    options += [f"-Dfrida_version={state.frida_version}"]
+F:\cursor\frida\subprojects\frida-core\compat\build.py:486:    if role == "subproject" and k.subproject == "frida-core":
+F:\cursor\frida\subprojects\frida-core\compat\build.py:497:    our_project_id = "frida-core" if role == "subproject" else ""
+F:\cursor\frida\subprojects\frida-core\compat\build.py:587:    gum_location = subprojects.get("frida-gum")
+F:\cursor\frida\subprojects\frida-core\compat\build.py:638:HELPER_TARGET = "frida-helper"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:639:HELPER_FILE_WINDOWS = Path("src") / "frida-helper.exe"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:640:HELPER_FILE_UNIX = Path("src") / "frida-helper"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:642:AGENT_TARGET = "frida-agent"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:643:AGENT_FILE_WINDOWS = Path("lib") / "agent" / "frida-agent.dll"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:644:AGENT_FILE_DARWIN = Path("lib") / "agent" / "frida-agent.dylib"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:645:AGENT_FILE_ELF = Path("lib") / "agent" / "frida-agent.so"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:647:GADGET_TARGET = "frida-gadget"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:648:GADGET_FILE_WINDOWS = Path("lib") / "gadget" / "frida-gadget.dll"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:649:GADGET_FILE_DARWIN = Path("lib") / "gadget" / "frida-gadget.dylib"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:650:GADGET_FILE_ELF = Path("lib") / "gadget" / "frida-gadget.so"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:652:SERVER_TARGET = "frida-server"
+F:\cursor\frida\subprojects\frida-core\compat\build.py:653:SERVER_FILE_UNIX = Path("server") / "frida-server"
+F:\cursor\frida\subprojects\frida-core\inject\inject-glue.c:3:#include "frida-core.h"
+F:\cursor\frida\subprojects\frida-core\inject\inject-glue.c:5:# include "frida-selinux.h"
+F:\cursor\frida\subprojects\frida-core\inject\inject-glue.c:9:frida_inject_environment_init (void)
+F:\cursor\frida\subprojects\frida-core\inject\inject-glue.c:11:  frida_init_with_runtime (FRIDA_RUNTIME_GLIB);
+F:\cursor\frida\subprojects\frida-core\inject\inject-glue.c:14:  frida_selinux_patch_policy ();
+F:\cursor\frida\subprojects\frida-core\inject\inject-glue.h:1:#ifndef __FRIDA_INJECT_GLUE_H__
+F:\cursor\frida\subprojects\frida-core\inject\inject-glue.h:2:#define __FRIDA_INJECT_GLUE_H__
+F:\cursor\frida\subprojects\frida-core\inject\inject-glue.h:8:G_GNUC_INTERNAL void frida_inject_environment_init (void);
+F:\cursor\frida\subprojects\frida-core\inject\inject.vala:1:namespace Frida.Inject {
+F:\cursor\frida\subprojects\frida-core\inject\inject.vala:355:			 *   onFridaStdin(data) {
+F:\cursor\frida\subprojects\frida-core\inject\inject.vala:525:					options.name = "frida";
+F:\cursor\frida\subprojects\frida-core\inject\inject.vala:599:				mode_value = yield rpc_client.call ("getFridaTerminalMode", new Json.Node[] {}, null, io_cancellable);
+F:\cursor\frida\subprojects\frida-core\inject\inject.vala:650:			rpc_client.call.begin ("onFridaStdin", new Json.Node[] { str_value }, data, io_cancellable);
+F:\cursor\frida\subprojects\frida-core\inject\inject.vala:664:			source.attach (Frida.get_main_context ());
+F:\cursor\frida\subprojects\frida-core\inject\inject.vala:723:		 * The script can send strings to frida-inject to write to its stdout or
+F:\cursor\frida\subprojects\frida-core\inject\inject.vala:725:		 * input from frida-inject, or elsewhere at any arbitrary point in the
+F:\cursor\frida\subprojects\frida-core\inject\inject.vala:728:		 * send(['frida:stdout', 'DATA']);
+F:\cursor\frida\subprojects\frida-core\inject\inject.vala:729:		 * send(['frida:stderr', 'DATA']);
+F:\cursor\frida\subprojects\frida-core\inject\inject.vala:735:		 * {"type":"send","payload":["frida:stdout","DATA"]}

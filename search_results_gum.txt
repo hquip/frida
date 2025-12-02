@@ -1,0 +1,50 @@
+﻿F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\generate-bindings.py:2593:     * where all branches are rewritten (e.g. Frida's Stalker)"""
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\generate-bindings.py:2600:     * branches are rewritten (e.g. Frida's Stalker)"""
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\generate-bindings.py:2862:    where all branches are rewritten (e.g. Frida's Stalker)."""
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\generate-bindings.py:2869:    branches are rewritten (e.g. Frida's Stalker)."""
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\generate-runtime.py:273:            "GUM_CHEADER_FRIDA",
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\generate-runtime.py:280:            "GUM_CHEADER_FRIDA",
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\generate-runtime.py:287:            "GUM_CHEADER_FRIDA",
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\generate-runtime.py:462:    if filename.startswith("frida-"):
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumcmodule.c:482:      "-isystem /frida "
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumcmodule.c:483:      "-isystem /frida/capstone "
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumcmodule.c:677:  if (g_str_has_prefix (name, "/frida/"))
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumcmodule.c:1200:    "--only-section=.frida",
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumcmodule.c:1254:      "  .frida 0x%zx: {\n"
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumcmodule.c:1787:    if (h->kind != GUM_CHEADER_FRIDA)
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumcmodule.h:78:  GUM_CHEADER_FRIDA,
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\guminspectorserver.c:319:  json_builder_add_string_value (builder, "Frida Agent");
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\guminspectorserver.c:325:  json_builder_add_string_value (builder, "https://frida.re/favicon.ico");
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\guminspectorserver.c:392:  json_builder_add_string_value (builder, "Frida/v" FRIDA_VERSION);
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickcmodule.c:158:  if (details->kind != GUM_CHEADER_FRIDA)
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickcompile.c:173:  parts[0] = g_strdup ("frida/runtime");
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickcore.c:197:GUMJS_DECLARE_GETTER (gumjs_frida_get_heap_size)
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickcore.c:468:static const JSCFunctionListEntry gumjs_frida_entries[] =
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickcore.c:470:  JS_PROP_STRING_DEF ("version", FRIDA_VERSION, JS_PROP_C_W_E),
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickcore.c:471:  JS_CGETSET_DEF ("heapSize", gumjs_frida_get_heap_size, NULL),
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickcore.c:1541:  JS_SetPropertyFunctionList (ctx, obj, gumjs_frida_entries,
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickcore.c:1542:      G_N_ELEMENTS (gumjs_frida_entries));
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickcore.c:1543:  JS_DefinePropertyValueStr (ctx, ns, "Frida", obj, JS_PROP_C_W_E);
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickcore.c:2159:GUMJS_DEFINE_GETTER (gumjs_frida_get_heap_size)
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickscript.c:1442:        "/_frida_worker_runtime.js",
+F:\cursor\frida\subprojects\frida-gum\bindings\gumjs\gumquickscriptbackend.c:1220:    name = g_strconcat ("/frida/runtime/", cur->name, NULL);
+F:\cursor\frida\subprojects\frida-gum\gum\backend-arm64\guminterceptor-arm64.c:547:      else if (g_str_has_prefix (sc->segname, "__FRIDA_DATA"))
+F:\cursor\frida\subprojects\frida-gum\gum\backend-arm64\gumstalker-arm64.c:3278:   * to a 16-byte boundary when it is used to access memory. One anti-Frida
+F:\cursor\frida\subprojects\frida-gum\gum\backend-arm64\gumstalker-arm64.c:3751: * stack when it isn't 16-byte aligned. Anti-Frida techniques have been observed
+F:\cursor\frida\subprojects\frida-gum\gum\backend-arm64\gumstalker-arm64.c:3754: * made to load or store from a misaligned stack pointer, this anti-Frida code
+F:\cursor\frida\subprojects\frida-gum\gum\backend-arm64\gumstalker-arm64.c:3756: * hence therefore force FRIDA to deal with a misaligned stack without
+F:\cursor\frida\subprojects\frida-gum\gum\backend-darwin\gumcodesegment-darwin.c:407:  self->fd = gum_file_open_tmp ("frida-XXXXXX.dylib", &dylib_path);
+F:\cursor\frida\subprojects\frida-gum\gum\backend-darwin\gumdarwinmapper.c:1031:      "frida_dylib_range=0x%" G_GINT64_MODIFIER "x,0x%" G_GSIZE_MODIFIER "x",
+F:\cursor\frida\subprojects\frida-gum\gum\backend-darwin\gumdarwinsymbolicator.c:749:   * loading it. This must be done by the user of frida-gum explicitly.
+F:\cursor\frida\subprojects\frida-gum\gum\backend-linux\gumandroid.c:712:   * application – or even Frida itself – may have mmap()ed the module.
+F:\cursor\frida\subprojects\frida-gum\gum\gum.c:34:#if !defined (GUM_USE_SYSTEM_ALLOC) && defined (HAVE_FRIDA_LIBFFI)
+F:\cursor\frida\subprojects\frida-gum\gum\gum.c:51:#if !defined (GUM_USE_SYSTEM_ALLOC) && defined (HAVE_FRIDA_LIBFFI)
+F:\cursor\frida\subprojects\frida-gum\gum\gum.c:55:#ifdef HAVE_FRIDA_GLIB
+F:\cursor\frida\subprojects\frida-gum\gum\gum.c:122:#ifdef HAVE_FRIDA_GLIB
+F:\cursor\frida\subprojects\frida-gum\gum\gum.c:184:#ifdef HAVE_FRIDA_GLIB
+F:\cursor\frida\subprojects\frida-gum\gum\gum.c:221:#if !defined (GUM_USE_SYSTEM_ALLOC) && defined (HAVE_FRIDA_LIBFFI)
+F:\cursor\frida\subprojects\frida-gum\gum\gum.c:230:#ifdef HAVE_FRIDA_GLIB
+F:\cursor\frida\subprojects\frida-gum\gum\gum.c:242:#if !defined (GUM_USE_SYSTEM_ALLOC) && defined (HAVE_FRIDA_GLIB) && \
+F:\cursor\frida\subprojects\frida-gum\gum\gum.c:278:#if !defined (GUM_USE_SYSTEM_ALLOC) && defined (HAVE_FRIDA_LIBFFI)
+F:\cursor\frida\subprojects\frida-gum\gum\gum.c:281:#ifdef HAVE_FRIDA_GLIB
+F:\cursor\frida\subprojects\frida-gum\gum\gum.c:292:#if !defined (GUM_USE_SYSTEM_ALLOC) && defined (HAVE_FRIDA_GLIB)
