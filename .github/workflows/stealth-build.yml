@@ -3,6 +3,8 @@ name: Stealth Build
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 permissions:
@@ -100,6 +102,7 @@ jobs:
       - name: Fix line endings
         run: |
           find . -type f \( -name "configure" -o -name "*.sh" \) -exec dos2unix {} + || true
+          chmod +x configure
 
       - name: Configure for Android
         run: |
