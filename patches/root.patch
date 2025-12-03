@@ -1,0 +1,92 @@
+diff --git a/configure b/configure
+index 77bf86f..786eb50 100755
+--- a/configure
++++ b/configure
+@@ -1,13 +1,13 @@
+-#!/bin/sh
+-
+-[ -z "$PYTHON" ] && PYTHON=$(which python3 >/dev/null && echo python3 || echo python)
+-
+-cd $(dirname $0)
+-srcroot=$(pwd)
+-[ ! -f releng/meson/meson.py ] && "$PYTHON" tools/ensure-submodules.py
+-cd - >/dev/null
+-
+-exec "$PYTHON" \
+-    -c "import sys; sys.path.insert(0, sys.argv[1]); from releng.meson_configure import main; main()" \
+-    "$srcroot" \
+-    "$@"
++#!/bin/sh
++
++[ -z "$PYTHON" ] && PYTHON=$(which python3 >/dev/null && echo python3 || echo python)
++
++cd $(dirname $0)
++srcroot=$(pwd)
++[ ! -f releng/meson/meson.py ] && "$PYTHON" tools/ensure-submodules.py
++cd - >/dev/null
++
++exec "$PYTHON" \
++    -c "import sys; sys.path.insert(0, sys.argv[1]); from releng.meson_configure import main; main()" \
++    "$srcroot" \
++    "$@"
+diff --git a/releng b/releng
+--- a/releng
++++ b/releng
+@@ -1 +1 @@
+-Subproject commit 800f2385c3e8faddecc8da58f8572ef34605fdce
++Subproject commit 800f2385c3e8faddecc8da58f8572ef34605fdce-dirty
+diff --git a/subprojects/frida-clr b/subprojects/frida-clr
+--- a/subprojects/frida-clr
++++ b/subprojects/frida-clr
+@@ -1 +1 @@
+-Subproject commit 9a2982cb25bd73dcca4f3b7d3205b7f102e174bc
++Subproject commit 9a2982cb25bd73dcca4f3b7d3205b7f102e174bc-dirty
+diff --git a/subprojects/frida-core b/subprojects/frida-core
+index 06b6bf8..820b9f0 160000
+--- a/subprojects/frida-core
++++ b/subprojects/frida-core
+@@ -1 +1 @@
+-Subproject commit 06b6bf81a662044cd3e55f2cf2e31cbf341c97c6
++Subproject commit 820b9f0284aaad6486f3c7675e18daaf431f4ebe-dirty
+diff --git a/subprojects/frida-go b/subprojects/frida-go
+--- a/subprojects/frida-go
++++ b/subprojects/frida-go
+@@ -1 +1 @@
+-Subproject commit fd52f64f49fbbde2820e02e6e6dd3aafd1ac0ce6
++Subproject commit fd52f64f49fbbde2820e02e6e6dd3aafd1ac0ce6-dirty
+diff --git a/subprojects/frida-gum b/subprojects/frida-gum
+--- a/subprojects/frida-gum
++++ b/subprojects/frida-gum
+@@ -1 +1 @@
+-Subproject commit c036589d46f4a2136c043b050c699a555a7ed53e
++Subproject commit c036589d46f4a2136c043b050c699a555a7ed53e-dirty
+diff --git a/subprojects/frida-node b/subprojects/frida-node
+--- a/subprojects/frida-node
++++ b/subprojects/frida-node
+@@ -1 +1 @@
+-Subproject commit 75854be2c62ced028115edb72ebc91195c7d7d56
++Subproject commit 75854be2c62ced028115edb72ebc91195c7d7d56-dirty
+diff --git a/subprojects/frida-python b/subprojects/frida-python
+--- a/subprojects/frida-python
++++ b/subprojects/frida-python
+@@ -1 +1 @@
+-Subproject commit c87cdca2932900cfe993fbd05bad4d76a57f678a
++Subproject commit c87cdca2932900cfe993fbd05bad4d76a57f678a-dirty
+diff --git a/subprojects/frida-qml b/subprojects/frida-qml
+--- a/subprojects/frida-qml
++++ b/subprojects/frida-qml
+@@ -1 +1 @@
+-Subproject commit bb524fc24b73fc4a9ecf0fc4e84362f4c36e41bb
++Subproject commit bb524fc24b73fc4a9ecf0fc4e84362f4c36e41bb-dirty
+diff --git a/subprojects/frida-swift b/subprojects/frida-swift
+--- a/subprojects/frida-swift
++++ b/subprojects/frida-swift
+@@ -1 +1 @@
+-Subproject commit 98a8a77db455750b9ca1cd9cc7ab4b6d2effaebd
++Subproject commit 98a8a77db455750b9ca1cd9cc7ab4b6d2effaebd-dirty
+diff --git a/subprojects/frida-tools b/subprojects/frida-tools
+--- a/subprojects/frida-tools
++++ b/subprojects/frida-tools
+@@ -1 +1 @@
+-Subproject commit e53a67b250e474b726ddbe4951b69b45ffadd5cd
++Subproject commit e53a67b250e474b726ddbe4951b69b45ffadd5cd-dirty

@@ -1,0 +1,68 @@
+name: Build Frida for iOS
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-13
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          brew install wget
+          pip3 install colorama prompt-toolkit pygments
+
+      - name: Apply Stealth Patches
+        run: |
+          # Apply root patch
+          if [ -f patches/root.patch ]; then
+            git apply patches/root.patch
+          fi
+          
+          # Apply frida-core patch
+          if [ -f patches/frida-core.patch ]; then
+            cd subprojects/frida-core
+            git apply ../../patches/frida-core.patch
+            cd ../..
+          fi
+          
+          # Apply frida-gum patch
+          if [ -f patches/frida-gum.patch ]; then
+            cd subprojects/frida-gum
+            git apply ../../patches/frida-gum.patch
+            cd ../..
+          fi
+          
+          echo "Patches applied successfully"
+
+      - name: Configure for iOS
+        run: |
+          export IOS_CERT_ID="" # Skip signing for build test
+          ./configure --host=ios-arm64
+
+      - name: Build
+        run: |
+          make core
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frida-ios-binaries
+          path: |
+            build/frida-ios-arm64/lib/agent/frida-agent.dylib
+            build/frida-ios-arm64/server/frida-server
