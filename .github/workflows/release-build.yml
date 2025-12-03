@@ -26,11 +26,56 @@ jobs:
           brew install wget
           pip3 install colorama prompt-toolkit pygments
 
+      - name: Check Submodules and Patches
+        run: |
+          git submodule status
+          ls -R patches/
+
       - name: Apply Stealth Patches
         run: |
-          if [ -f patches/root.patch ]; then git apply patches/root.patch; fi
-          if [ -f patches/frida-core.patch ]; then cd subprojects/frida-core && git apply ../../patches/frida-core.patch && cd ../..; fi
-          if [ -f patches/frida-gum.patch ]; then cd subprojects/frida-gum && git apply ../../patches/frida-gum.patch && cd ../..; fi
+          # Define apply function for consistency
+          apply_patch() {
+            patch_file="$1"
+            target_dir="$2"
+            echo "Applying $patch_file to $target_dir..."
+            # Resolve absolute path for patch file if it starts with ../
+            if [[ "$patch_file" == ../* ]]; then
+               # Assuming we are in subprojects/frida-core or gum, so ../../patches is correct relative to CWD
+               # But to be safe, let's use the full path from root
+               # actually, let's just use the relative path as passed, assuming CWD is correct
+               :
+            fi
+
+            if [ -f "$patch_file" ]; then
+              if [ "$target_dir" != "." ]; then
+                cd "$target_dir"
+              fi
+              
+              # Try applying with git apply, falling back to patch if needed, or ignoring whitespace
+              git apply --verbose --ignore-space-change --whitespace=fix "$patch_file" || {
+                echo "Error applying $patch_file"
+                exit 1
+              }
+              
+              if [ "$target_dir" != "." ]; then
+                cd - > /dev/null
+              fi
+            else
+              echo "Patch file $patch_file not found!"
+              exit 1
+            fi
+          }
+
+          # Apply root patch
+          apply_patch "patches/root.patch" "."
+          
+          # Apply frida-core patch
+          apply_patch "../../patches/frida-core.patch" "subprojects/frida-core"
+          
+          # Apply frida-gum patch
+          apply_patch "../../patches/frida-gum.patch" "subprojects/frida-gum"
+          
+          echo "All patches applied successfully"
 
       - name: Configure for iOS
         run: |
@@ -76,11 +121,37 @@ jobs:
           sdkmanager --install "ndk;25.2.9519653"
           echo "ANDROID_NDK_ROOT=$ANDROID_HOME/ndk/25.2.9519653" >> $GITHUB_ENV
 
+      - name: Check Submodules and Patches
+        run: |
+          git submodule status
+          ls -R patches/
+
       - name: Apply Stealth Patches
         run: |
-          if [ -f patches/root.patch ]; then git apply patches/root.patch; fi
-          if [ -f patches/frida-core.patch ]; then cd subprojects/frida-core && git apply ../../patches/frida-core.patch && cd ../..; fi
-          if [ -f patches/frida-gum.patch ]; then cd subprojects/frida-gum && git apply ../../patches/frida-gum.patch && cd ../..; fi
+          apply_patch() {
+            patch_file="$1"
+            target_dir="$2"
+            echo "Applying $patch_file to $target_dir..."
+            if [ -f "$patch_file" ]; then
+              if [ "$target_dir" != "." ]; then
+                cd "$target_dir"
+              fi
+              git apply --verbose --ignore-space-change --whitespace=fix "$patch_file" || {
+                echo "Error applying $patch_file"
+                exit 1
+              }
+              if [ "$target_dir" != "." ]; then
+                cd - > /dev/null
+              fi
+            else
+              echo "Patch file $patch_file not found!"
+              exit 1
+            fi
+          }
+
+          apply_patch "patches/root.patch" "."
+          apply_patch "../../patches/frida-core.patch" "subprojects/frida-core"
+          apply_patch "../../patches/frida-gum.patch" "subprojects/frida-gum"
 
       - name: Configure for Android
         run: |
