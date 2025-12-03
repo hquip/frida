@@ -9,7 +9,7 @@ jobs:
   build-ios:
     runs-on: macos-latest
     env:
-      IOS_CERT_ID: "-"
+      IOS_CERTID: "-"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,6 +30,7 @@ jobs:
       - name: Fix line endings
         run: |
           find . -type f \( -name "configure" -o -name "*.sh" \) -exec dos2unix {} + || true
+          chmod +x configure
 
       - name: Configure for iOS
         run: |
