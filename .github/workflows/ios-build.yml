@@ -59,7 +59,18 @@ jobs:
         run: |
           make core
 
-      - name: Upload Artifacts
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            build/frida-ios-arm64/lib/agent/frida-agent.dylib
+            build/frida-ios-arm64/server/frida-server
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifacts (Fallback)
+        if: "!startsWith(github.ref, 'refs/tags/')"
         uses: actions/upload-artifact@v4
         with:
           name: frida-ios-binaries
