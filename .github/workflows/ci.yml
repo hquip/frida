@@ -1,6 +1,6 @@
 name: CI
 
-on: push
+# on: push
 
 env:
   FRIDA_COMPILER_MOD: subprojects/frida-core/src/compiler/go.mod
