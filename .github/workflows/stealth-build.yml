@@ -49,8 +49,8 @@ jobs:
         with:
           name: frida-ios-binaries
           path: |
-            build/frida-ios-arm64/lib/agent/frida-agent.dylib
-            build/frida-ios-arm64/server/frida-server
+            build/**/*.dylib
+            build/**/server/*
 
   build-android:
     runs-on: ubuntu-22.04
@@ -102,5 +102,5 @@ jobs:
         with:
           name: frida-android-binaries
           path: |
-            build/frida-android-arm64/lib/agent/libfrida-agent-raw.so
-            build/frida-android-arm64/server/frida-server
+            build/**/*.so
+            build/**/server/*
