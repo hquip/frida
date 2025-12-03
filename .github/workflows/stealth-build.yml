@@ -27,7 +27,7 @@ jobs:
 
       - name: Fix line endings
         run: |
-          find . -type f \( -name "configure" -o -name "*.sh" \) -exec dos2unix {} +
+          find . -type f \( -name "configure" -o -name "*.sh" \) -exec dos2unix {} + || true
 
       - name: Configure for iOS
         run: |
@@ -81,7 +81,7 @@ jobs:
 
       - name: Fix line endings
         run: |
-          find . -name "configure" -o -name "*.sh" | xargs dos2unix
+          find . -type f \( -name "configure" -o -name "*.sh" \) -exec dos2unix {} + || true
 
       - name: Configure for Android
         run: |
