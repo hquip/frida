@@ -1,0 +1,130 @@
+name: Build Frida (Stealth)
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          brew install wget
+          pip3 install colorama prompt-toolkit pygments
+
+      - name: Apply Stealth Patches
+        run: |
+          if [ -f patches/root.patch ]; then git apply patches/root.patch; fi
+          if [ -f patches/frida-core.patch ]; then cd subprojects/frida-core && git apply ../../patches/frida-core.patch && cd ../..; fi
+          if [ -f patches/frida-gum.patch ]; then cd subprojects/frida-gum && git apply ../../patches/frida-gum.patch && cd ../..; fi
+
+      - name: Configure for iOS
+        run: |
+          export IOS_CERT_ID=""
+          ./configure --host=ios-arm64
+
+      - name: Build
+        run: |
+          make core
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frida-ios-binaries
+          path: |
+            build/frida-ios-arm64/lib/agent/frida-agent.dylib
+            build/frida-ios-arm64/server/frida-server
+
+  build-android:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential curl git lib32stdc++-9-dev libc6-dev-i386 nodejs npm
+          pip3 install colorama prompt-toolkit pygments
+
+      - name: Setup NDK
+        uses: android-actions/setup-android@v3
+      - name: Install NDK
+        run: |
+          sdkmanager --install "ndk;25.2.9519653"
+          echo "ANDROID_NDK_ROOT=$ANDROID_HOME/ndk/25.2.9519653" >> $GITHUB_ENV
+
+      - name: Apply Stealth Patches
+        run: |
+          if [ -f patches/root.patch ]; then git apply patches/root.patch; fi
+          if [ -f patches/frida-core.patch ]; then cd subprojects/frida-core && git apply ../../patches/frida-core.patch && cd ../..; fi
+          if [ -f patches/frida-gum.patch ]; then cd subprojects/frida-gum && git apply ../../patches/frida-gum.patch && cd ../..; fi
+
+      - name: Configure for Android
+        run: |
+          ./configure --host=android-arm64
+
+      - name: Build
+        run: |
+          make core
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frida-android-binaries
+          path: |
+            build/frida-android-arm64/lib/agent/libfrida-agent-raw.so
+            build/frida-android-arm64/server/frida-server
+
+  release:
+    needs: [build-ios, build-android]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Download iOS Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frida-ios-binaries
+          path: ios
+
+      - name: Download Android Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: frida-android-binaries
+          path: android
+
+      - name: Rename Android Server
+        run: mv android/frida-server android/fs-server
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ios/frida-server
+            ios/frida-agent.dylib
+            android/fs-server
+            android/libfrida-agent-raw.so
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
