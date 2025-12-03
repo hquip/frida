@@ -8,6 +8,8 @@ on:
 jobs:
   build-ios:
     runs-on: macos-latest
+    env:
+      IOS_CERT_ID: "-"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -31,7 +33,6 @@ jobs:
 
       - name: Configure for iOS
         run: |
-          export IOS_CERT_ID=""
           ./configure --host=ios-arm64
 
       - name: Build
