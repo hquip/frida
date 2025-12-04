@@ -30,9 +30,33 @@ fi
 adb push build/subprojects/frida-core/inject/frida-inject /data/local/tmp/fs-inject > /dev/null 2>&1
 adb shell "chmod 755 /data/local/tmp/fs-inject"
 
+# 推送本地编译的服务端
+if [ ! -f "build/subprojects/frida-core/server/android_fs-server" ]; then
+    echo "错误: 找不到 android_fs-server"
+    exit 1
+fi
+echo "推送本地编译的 frida-server..."
+adb push build/subprojects/frida-core/server/android_fs-server /data/local/tmp/fs-server > /dev/null 2>&1
+adb shell "chmod 755 /data/local/tmp/fs-server"
+
+# 启动 frida-server (后台运行)
+echo "启动 frida-server..."
+adb shell "killall fs-server" > /dev/null 2>&1 || true
+adb shell "nohup /data/local/tmp/fs-server > /dev/null 2>&1 &"
+sleep 3
+
+# 验证 server 是否启动
+SERVER_PID=$(adb shell "pidof fs-server")
+if [ -z "$SERVER_PID" ]; then
+    echo "警告: frida-server 未启动成功，但继续测试..."
+else
+    echo "frida-server 已启动 (PID: $SERVER_PID)"
+fi
+
+
 # 2. 启动目标进程
 echo "[2/4] 启动目标进程..."
-adb shell "/data/local/tmp/anti_detection" > /dev/null 2>&1 &
+adb shell "nohup /data/local/tmp/anti_detection > /dev/null 2>&1 &"
 # 等待进程启动
 sleep 2
 TARGET_PID=$(adb shell pidof anti_detection)
