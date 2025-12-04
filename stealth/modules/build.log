@@ -1,0 +1,73 @@
+Building env_cleaner.so...
+aarch64-linux-gnu-gcc -shared -fPIC -O2 -Wall -o ./env_cleaner.so src/env_cleaner.c
+src/env_cleaner.c: In function ‘getenv’:
+src/env_cleaner.c:29:8: warning: ‘nonnull’ argument ‘name’ compared to NULL [-Wnonnull-compare]
+   29 |     if (name && (strcmp(name, "LD_PRELOAD") == 0 ||
+      |        ^
+Building thread_name_obfuscator.so...
+aarch64-linux-gnu-gcc -shared -fPIC -O2 -Wall -o ./thread_name_obfuscator.so src/thread_name_obfuscator.c
+Building proc_hider.so...
+aarch64-linux-gnu-gcc -shared -fPIC -O2 -Wall -o ./proc_hider.so src/proc_hider.c
+src/proc_hider.c:46:14: warning: ‘filter_content’ defined but not used [-Wunused-function]
+   46 | static char* filter_content(char *content) {
+      |              ^~~~~~~~~~~~~~
+Building antidebug_bypass.so...
+aarch64-linux-gnu-gcc -shared -fPIC -O2 -Wall -o ./antidebug_bypass.so src/antidebug_bypass.c
+Building behavior_randomizer.so...
+aarch64-linux-gnu-gcc -shared -fPIC -O2 -Wall -o ./behavior_randomizer.so src/behavior_randomizer.c
+src/behavior_randomizer.c: In function ‘init_cpu_limit’:
+src/behavior_randomizer.c:69:5: warning: ignoring return value of ‘nice’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   69 |     nice(10);
+      |     ^~~~~~~~
+Building traffic_obfuscator.so...
+aarch64-linux-gnu-gcc -shared -fPIC -O2 -Wall -o ./traffic_obfuscator.so src/traffic_obfuscator.c
+Building sandbox_bypass.so...
+aarch64-linux-gnu-gcc -shared -fPIC -O2 -Wall -o ./sandbox_bypass.so src/sandbox_bypass.c
+Building memory_protector.so...
+aarch64-linux-gnu-gcc -shared -fPIC -O2 -Wall -o ./memory_protector.so src/memory_protector.c
+src/memory_protector.c:47:13: warning: ‘reprotect_after_access’ defined but not used [-Wunused-function]
+   47 | static void reprotect_after_access(void *addr) {
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+src/memory_protector.c:34:13: warning: ‘unprotect_for_access’ defined but not used [-Wunused-function]
+   34 | static void unprotect_for_access(void *addr) {
+      |             ^~~~~~~~~~~~~~~~~~~~
+Building hook_detector.so...
+aarch64-linux-gnu-gcc -shared -fPIC -O2 -Wall -o ./hook_detector.so src/hook_detector.c
+Building rdtsc_virtualizer.so...
+aarch64-linux-gnu-gcc -shared -fPIC -O2 -Wall -o ./rdtsc_virtualizer.so src/rdtsc_virtualizer.c
+src/rdtsc_virtualizer.c:27:17: warning: ‘get_virtual_tsc’ defined but not used [-Wunused-function]
+   27 | static uint64_t get_virtual_tsc() {
+      |                 ^~~~~~~~~~~~~~~
+src/rdtsc_virtualizer.c: In function ‘gettimeofday’:
+src/rdtsc_virtualizer.c:68:21: warning: ‘nonnull’ argument ‘tv’ compared to NULL [-Wnonnull-compare]
+   68 |     if (result == 0 && tv) {
+      |                     ^~
+Building chacha20_tls.so...
+aarch64-linux-gnu-gcc -shared -fPIC -O2 -Wall -o ./chacha20_tls.so src/chacha20_tls.c
+src/chacha20_tls.c:15:36: error: unknown type name ‘uint32_t’
+   15 | static void chacha20_quarter_round(uint32_t *state, int a, int b, int c, int d) {
+      |                                    ^~~~~~~~
+src/chacha20_tls.c:6:1: note: ‘uint32_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+    5 | #include <dlfcn.h>
+  +++ |+#include <stdint.h>
+    6 | 
+src/chacha20_tls.c:22:28: error: unknown type name ‘uint32_t’
+   22 | static void chacha20_block(uint32_t *output, const uint32_t *input) {
+      |                            ^~~~~~~~
+src/chacha20_tls.c:22:28: note: ‘uint32_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+src/chacha20_tls.c:22:52: error: unknown type name ‘uint32_t’
+   22 | static void chacha20_block(uint32_t *output, const uint32_t *input) {
+      |                                                    ^~~~~~~~
+src/chacha20_tls.c: In function ‘chacha20_encrypt’:
+src/chacha20_tls.c:43:5: error: unknown type name ‘uint32_t’
+   43 |     uint32_t state[16] = {
+      |     ^~~~~~~~
+src/chacha20_tls.c:43:5: note: ‘uint32_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+src/chacha20_tls.c:52:5: error: unknown type name ‘uint32_t’
+   52 |     uint32_t keystream[16];
+      |     ^~~~~~~~
+src/chacha20_tls.c:52:5: note: ‘uint32_t’ is defined in header ‘<stdint.h>’; did you forget to ‘#include <stdint.h>’?
+src/chacha20_tls.c:56:9: warning: implicit declaration of function ‘chacha20_block’ [-Wimplicit-function-declaration]
+   56 |         chacha20_block(keystream, state);
+      |         ^~~~~~~~~~~~~~
+make: *** [Makefile:29：chacha20_tls.so] 错误 1
