@@ -13,15 +13,32 @@ fi
 echo "Target: $TARGET"
 
 PWD=$(pwd)
+OS=$(uname -s)
 
 # Only set NDK root if not already set (e.g. by CI)
 if [ -z "$ANDROID_NDK_ROOT" ]; then
     export ANDROID_NDK_ROOT="$PWD/android-ndk-r25c"
 fi
 
-# Use dynamic paths for toolchain
-export PATH="$PWD/deps/toolchain-linux-x86_64/bin:$PATH"
-export NINJA="$PWD/deps/toolchain-linux-x86_64/bin/ninja"
+# Use dynamic paths for toolchain based on OS
+if [ "$OS" == "Darwin" ]; then
+    # macOS (CI runner)
+    # Ninja is likely installed via brew or in a different toolchain path
+    # We'll check if ninja is in PATH, if not, try to find it
+    if ! command -v ninja &> /dev/null; then
+        # Fallback or specific macOS toolchain path if needed
+        # For now, assume brew install ninja was run in CI
+        echo "Warning: ninja not found in PATH on macOS. Checking deps..."
+    fi
+    # Don't override NINJA if it's already in PATH or set
+    if [ -z "$NINJA" ]; then
+        export NINJA=$(which ninja)
+    fi
+else
+    # Linux
+    export PATH="$PWD/deps/toolchain-linux-x86_64/bin:$PATH"
+    export NINJA="$PWD/deps/toolchain-linux-x86_64/bin/ninja"
+fi
 
 echo "╔══════════════════════════════════════════════════════════╗"
 echo "║   Frida Stealth - 完整编译脚本 ($TARGET)                 ║"
