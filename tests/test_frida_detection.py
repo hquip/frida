@@ -389,10 +389,53 @@ def test_hardware_spoofing():
     
     return is_spoofed_model and is_not_debuggable and is_secure
 
+def test_modules_loaded():
+    """测试16: 验证所有14个保护模块是否加载"""
+    print_header("测试 16: 保护模块加载检测")
+    
+    expected_modules = [
+        "env_cleaner.so",
+        "thread_name_obfuscator.so",
+        "proc_hider.so",
+        "antidebug_bypass.so",
+        "behavior_randomizer.so",
+        "traffic_obfuscator.so",
+        "sandbox_bypass.so",
+        "memory_protector.so",
+        "hook_detector.so",
+        "rdtsc_virtualizer.so",
+        "chacha20_tls.so",
+        "selinux_spoofer.so",
+        "art_hook_hider.so",
+        "hardware_spoofer.so"
+    ]
+    
+    # 获取 fs-server 的 PID
+    pid = run_adb("pidof fs-server").strip()
+    if not pid:
+        print_test("获取fs-server PID", False, "未找到fs-server进程")
+        return False
+        
+    # 获取 maps
+    maps = run_adb(f"cat /proc/{pid}/maps 2>/dev/null")
+    
+    all_loaded = True
+    for module in expected_modules:
+        is_loaded = module in maps
+        print_test(
+            f"模块加载: {module}",
+            is_loaded,
+            "已加载" if is_loaded else "未加载 (可能被隐藏或加载失败)"
+        )
+        if not is_loaded:
+            all_loaded = False
+            
+    return all_loaded
+
 def main():
     print(f"\n{Colors.BOLD}{Colors.BLUE}")
     print("╔════════════════════════════════════════════════════════════╗")
-    print("║     Frida 反检测测试工具 v1.1                              ║")
+    print("║     Frida 反检测测试工具 v1.2                              ║")
     print("║     测试定制编译的Frida Server防检测能力                   ║")
     print("╚════════════════════════════════════════════════════════════╝")
     print(Colors.END)
@@ -422,6 +465,7 @@ def main():
     results['tracerpid'] = test_tracerpid()
     results['dbus'] = test_dbus()
     results['hardware'] = test_hardware_spoofing()
+    results['modules'] = test_modules_loaded()
     
     # 统计结果
     print_header("测试总结")
