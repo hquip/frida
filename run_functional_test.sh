@@ -31,12 +31,13 @@ adb push build/subprojects/frida-core/inject/frida-inject /data/local/tmp/fs-inj
 adb shell "chmod 755 /data/local/tmp/fs-inject"
 
 # 推送本地编译的服务端
-if [ ! -f "build/subprojects/frida-core/server/android_fs-server" ]; then
-    echo "错误: 找不到 android_fs-server"
+# 推送本地编译的服务端
+if [ ! -f "frida-server-stealth" ]; then
+    echo "错误: 找不到 frida-server-stealth"
     exit 1
 fi
 echo "推送本地编译的 frida-server..."
-adb push build/subprojects/frida-core/server/android_fs-server /data/local/tmp/fs-server > /dev/null 2>&1
+adb push frida-server-stealth /data/local/tmp/fs-server > /dev/null 2>&1
 adb shell "chmod 755 /data/local/tmp/fs-server"
 
 # 启动 frida-server (后台运行)
