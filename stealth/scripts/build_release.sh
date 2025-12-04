@@ -12,9 +12,16 @@ fi
 
 echo "Target: $TARGET"
 
-export ANDROID_NDK_ROOT=/root/frida/android-ndk-r25c
-export PATH=/root/frida/deps/toolchain-linux-x86_64/bin:$PATH
-export NINJA=/root/frida/deps/toolchain-linux-x86_64/bin/ninja
+PWD=$(pwd)
+
+# Only set NDK root if not already set (e.g. by CI)
+if [ -z "$ANDROID_NDK_ROOT" ]; then
+    export ANDROID_NDK_ROOT="$PWD/android-ndk-r25c"
+fi
+
+# Use dynamic paths for toolchain
+export PATH="$PWD/deps/toolchain-linux-x86_64/bin:$PATH"
+export NINJA="$PWD/deps/toolchain-linux-x86_64/bin/ninja"
 
 echo "╔══════════════════════════════════════════════════════════╗"
 echo "║   Frida Stealth - 完整编译脚本 ($TARGET)                 ║"
