@@ -83,7 +83,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential curl git lib32stdc++-9-dev libc6-dev-i386 nodejs npm dos2unix
+          sudo apt-get install -y build-essential curl git lib32stdc++-9-dev libc6-dev-i386 nodejs npm dos2unix gcc-aarch64-linux-gnu
           pip3 install colorama prompt-toolkit pygments
 
       - name: Setup JDK 17
@@ -103,22 +103,16 @@ jobs:
         run: |
           find . -type f \( -name "configure" -o -name "*.sh" \) -exec dos2unix {} + || true
           chmod +x configure
+          chmod +x stealth/scripts/*.sh
 
-      - name: Configure for Android
+      - name: Build Stealth Release
         run: |
-          ./configure --host=android-arm64
-
-      - name: Build
-        run: |
-          make
+          ./stealth/scripts/build_release.sh
 
       - name: Package Release
         run: |
           mkdir -p release
-          # Find server binary (executable, in server directory, likely no extension)
-          find build -type f -path "*/server/*" ! -name "*.*" -exec cp {} release/ \;
-          # Find agent (so)
-          find build -type f -path "*/agent/*.so" -exec cp {} release/ \;
+          cp frida-server-stealth release/
           echo "Release contents:"
           ls -R release
 
