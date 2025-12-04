@@ -9,29 +9,29 @@ ifeq ($(TARGET),ios)
     CFLAGS = -dynamiclib -arch arm64 -O2 -Wall -framework Foundation
     EXT = dylib
     OUT_DIR = .
+    MODULES = ios_stealth.$(EXT)
 else
     CC = aarch64-linux-gnu-gcc
     CFLAGS = -shared -fPIC -O2 -Wall
     EXT = so
     OUT_DIR = .
+    MODULES = env_cleaner.$(EXT) \
+              thread_name_obfuscator.$(EXT) \
+              proc_hider.$(EXT) \
+              antidebug_bypass.$(EXT) \
+              behavior_randomizer.$(EXT) \
+              traffic_obfuscator.$(EXT) \
+              sandbox_bypass.$(EXT) \
+              memory_protector.$(EXT) \
+              hook_detector.$(EXT) \
+              rdtsc_virtualizer.$(EXT) \
+              chacha20_tls.$(EXT) \
+              selinux_spoofer.$(EXT) \
+              art_hook_hider.$(EXT) \
+              hardware_spoofer.$(EXT)
 endif
 
 SRC_DIR = src
-
-MODULES = env_cleaner.$(EXT) \
-          thread_name_obfuscator.$(EXT) \
-          proc_hider.$(EXT) \
-          antidebug_bypass.$(EXT) \
-          behavior_randomizer.$(EXT) \
-          traffic_obfuscator.$(EXT) \
-          sandbox_bypass.$(EXT) \
-          memory_protector.$(EXT) \
-          hook_detector.$(EXT) \
-          rdtsc_virtualizer.$(EXT) \
-          chacha20_tls.$(EXT) \
-          selinux_spoofer.$(EXT) \
-          art_hook_hider.$(EXT) \
-          hardware_spoofer.$(EXT)
 
 .PHONY: all clean install list help
 
