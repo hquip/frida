@@ -349,10 +349,50 @@ def test_dbus():
     
     return not has_frida_dbus
 
+def test_hardware_spoofing():
+    """测试15: 硬件信息伪装检测"""
+    print_header("测试 15: 硬件信息伪装检测")
+    
+    # 检查是否成功伪装成了 Pixel 8 Pro (husky)
+    # 注意：这个测试依赖于 hardware_spoofer.so 模块是否生效
+    # 我们通过 getprop 获取属性，如果模块生效，应该返回伪装值
+    
+    # 1. 检查 ro.product.model
+    model = run_adb("getprop ro.product.model").strip()
+    is_spoofed_model = model == "Pixel 8 Pro"
+    
+    print_test(
+        "设备型号伪装 (Pixel 8 Pro)",
+        is_spoofed_model,
+        f"当前型号: {model}"
+    )
+    
+    # 2. 检查 ro.debuggable (应为 0)
+    debuggable = run_adb("getprop ro.debuggable").strip()
+    is_not_debuggable = debuggable == "0"
+    
+    print_test(
+        "调试状态伪装 (ro.debuggable=0)",
+        is_not_debuggable,
+        f"当前状态: {debuggable}"
+    )
+    
+    # 3. 检查 ro.secure (应为 1)
+    secure = run_adb("getprop ro.secure").strip()
+    is_secure = secure == "1"
+    
+    print_test(
+        "安全状态伪装 (ro.secure=1)",
+        is_secure,
+        f"当前状态: {secure}"
+    )
+    
+    return is_spoofed_model and is_not_debuggable and is_secure
+
 def main():
     print(f"\n{Colors.BOLD}{Colors.BLUE}")
     print("╔════════════════════════════════════════════════════════════╗")
-    print("║     Frida 反检测测试工具 v1.0                              ║")
+    print("║     Frida 反检测测试工具 v1.1                              ║")
     print("║     测试定制编译的Frida Server防检测能力                   ║")
     print("╚════════════════════════════════════════════════════════════╝")
     print(Colors.END)
@@ -381,6 +421,7 @@ def main():
     results['threads'] = test_threads()
     results['tracerpid'] = test_tracerpid()
     results['dbus'] = test_dbus()
+    results['hardware'] = test_hardware_spoofing()
     
     # 统计结果
     print_header("测试总结")
