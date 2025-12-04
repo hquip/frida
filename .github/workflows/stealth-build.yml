@@ -36,25 +36,16 @@ jobs:
         run: |
           find . -type f \( -name "configure" -o -name "*.sh" \) -exec dos2unix {} + || true
           chmod +x configure
+          chmod +x stealth/scripts/*.sh
 
-      - name: Configure for iOS
+      - name: Build Stealth Release
         run: |
-          ./configure --host=ios-arm64
-
-      - name: Build
-        run: |
-          make
-
-      - name: List build directory
-        run: ls -R build || true
+          ./stealth/scripts/build_release.sh ios
 
       - name: Package Release
         run: |
           mkdir -p release
-          # Find server binary (executable, in server directory, likely no extension)
-          find build -type f -path "*/server/*" ! -name "*.*" -exec cp {} release/ \;
-          # Find agent (dylib)
-          find build -type f -path "*/agent/*.dylib" -exec cp {} release/ \;
+          cp frida-server-stealth release/frida-server-stealth-ios
           echo "Release contents:"
           ls -R release
 

@@ -1,72 +1,80 @@
 #!/bin/bash
-# Create a single self-extracting executable for Ultimate Stealth Frida
-# Usage: ./package_standalone.sh
+# Packages the compiled server and modules into a self-extracting executable
 
-set -e
-
-OUTPUT_FILE="frida-server-stealth"
-BUILD_DIR="build"
-MODULES_DIR="$(pwd)/stealth/modules"
-SERVER_BIN="$BUILD_DIR/release/fs-server-ultimate"
-
-# Ensure ultimate build exists
-if [ ! -f "$SERVER_BIN" ]; then
-    echo "Building ultimate server first..."
-    ./stealth/scripts/build_ultimate.sh
+# Default target
+TARGET="android"
+if [ "$1" == "ios" ]; then
+    TARGET="ios"
 fi
 
-echo "Creating single-file executable: $OUTPUT_FILE"
+BUILD_DIR="build"
+MODULES_DIR="$(pwd)/stealth/modules"
+OUTPUT_FILE="frida-server-stealth"
+SERVER_BIN="$BUILD_DIR/release/fs-server-ultimate"
+
+if [ ! -f "$SERVER_BIN" ]; then
+    echo "Error: Server binary not found at $SERVER_BIN"
+    exit 1
+fi
+
+echo "Packaging for $TARGET..."
+
+# Determine extensions and env vars
+if [ "$TARGET" == "ios" ]; then
+    EXT="dylib"
+    PRELOAD_VAR="DYLD_INSERT_LIBRARIES"
+else
+    EXT="so"
+    PRELOAD_VAR="LD_PRELOAD"
+fi
 
 # Create the wrapper script header
-cat > "$OUTPUT_FILE" <<'EOF'
-#!/bin/sh
-# Self-extracting Frida Stealth Server
-# Dynamic protection module loading
+cat > header.sh <<EOF
+#!/bin/bash
+# Frida Stealth Launcher
+# Auto-extracts and runs with protection modules
 
-export TMPDIR=/data/local/tmp
-INSTALL_DIR=$(mktemp -d $TMPDIR/fs-stealth.XXXXXX)
+# Create a temporary directory
+TMP_DIR=\$(mktemp -d /tmp/frida-stealth.XXXXXX)
+# Extract payload to temp dir
+tail -n +\$((\$(wc -l < "\$0") + 1)) "\$0" | tar xz -C "\$TMP_DIR"
 
-# Extract payload
-tail -n +$(($(grep -a -n "^__PAYLOAD_BELOW__$" $0 | head -n 1 | cut -d : -f 1) + 1)) $0 | tar xz -C $INSTALL_DIR
+# Set up environment
+export FRIDA_SERVER_ADDRESS=127.0.0.1:27042
 
-# Setup environment
-chmod 755 $INSTALL_DIR/*
-
-# Dynamically build LD_PRELOAD from all .so files in the install dir
-PRELOAD_LIST=""
-for lib in $INSTALL_DIR/*.so; do
-    if [ -f "$lib" ]; then
-        if [ -z "$PRELOAD_LIST" ]; then
-            PRELOAD_LIST="$lib"
+# Build the preload list dynamically
+MODULE_LIST=""
+for f in "\$TMP_DIR"/*.$EXT; do
+    if [ -f "\$f" ]; then
+        if [ -z "\$MODULE_LIST" ]; then
+            MODULE_LIST="\$f"
         else
-            PRELOAD_LIST="$PRELOAD_LIST:$lib"
+            MODULE_LIST="\$MODULE_LIST:\$f"
         fi
     fi
 done
 
-export LD_PRELOAD=$PRELOAD_LIST
+export $PRELOAD_VAR="\$MODULE_LIST"
 
-# Run server
-echo "🚀 Launching Stealth Frida Server..."
-echo "    Loaded modules: $(echo $LD_PRELOAD | tr ':' '\n' | wc -l)"
-$INSTALL_DIR/fs-server-ultimate "$@" &
-PID=$!
-echo "✅ Server running (PID: $PID)"
+# Launch the server
+# exec "\$TMP_DIR/fs-server-ultimate" "\$@"
+# Use exec -a to spoof process name if possible (linux only usually, but harmless on others?)
+# For iOS/BSD, exec -a might not work or be needed.
+exec "\$TMP_DIR/fs-server-ultimate" "\$@"
 
-# Wait for server
-wait $PID
-
-# Cleanup on exit (trap)
-rm -rf $INSTALL_DIR
-exit 0
-
-__PAYLOAD_BELOW__
+# Cleanup (this won't run after exec, but good for reference)
+rm -rf "\$TMP_DIR"
 EOF
 
-# Dynamically find all .so files to include
+chmod +x header.sh
+
+# Start building the final binary
+cp header.sh "$OUTPUT_FILE"
+
+# Dynamically find all module files to include
 echo "Adding modules from $MODULES_DIR:"
 MODULE_FILES=""
-for f in "$MODULES_DIR"/*.so; do
+for f in "$MODULES_DIR"/*.$EXT; do
     if [ -f "$f" ]; then
         fname=$(basename "$f")
         echo "  + $fname"
@@ -75,18 +83,26 @@ for f in "$MODULES_DIR"/*.so; do
 done
 
 # Create tarball of all components
-# We change directory to MODULES_DIR to add .so files without path prefix
-# And we use -C to jump to build dir for the server binary
-tar czf - \
-    -C "$BUILD_DIR/release" fs-server-ultimate \
-    -C "$MODULES_DIR" $MODULE_FILES \
-    >> "$OUTPUT_FILE"
+# Note: We use -C to change directory to avoid full paths in tar
+# We need to add server and modules.
+# To keep it simple, we'll copy everything to a temp dir and tar that.
+PKG_TMP=$(mktemp -d)
+cp "$SERVER_BIN" "$PKG_TMP/"
+if [ -n "$MODULE_FILES" ]; then
+    for mod in $MODULE_FILES; do
+        cp "$MODULES_DIR/$mod" "$PKG_TMP/"
+    done
+fi
 
+tar czf - -C "$PKG_TMP" . >> "$OUTPUT_FILE"
+
+rm -rf "$PKG_TMP"
+rm header.sh
 chmod +x "$OUTPUT_FILE"
 
-echo ""
 echo "🎉 Success! Created '$OUTPUT_FILE'"
-echo "Size: $(du -h $OUTPUT_FILE | cut -f1)"
+echo "Size: $(du -h "$OUTPUT_FILE" | cut -f1)"
+
 echo ""
 echo "Usage:"
 echo "  1. Push to device: adb push $OUTPUT_FILE /data/local/tmp/"
